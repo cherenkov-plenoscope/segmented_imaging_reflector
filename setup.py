@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="segmented_imaging_reflector",
-    version="0.0.0",
+    version="0.0.1",
     description="Investigating cost-effective and mass-produced segmented imaging-reflectors",
     long_description=long_description,
     long_description_content_type="text/markdown",
