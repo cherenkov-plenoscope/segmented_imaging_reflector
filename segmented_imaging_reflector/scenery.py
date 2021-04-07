@@ -7,11 +7,10 @@ IMAGE_SENSOR_ID = 0
 
 
 def add_image_sensor_to_scenery(scenery, job):
-    _image_sensor_mesh = oow.primitives.spherical_cap.make_round_mesh(
+    _image_sensor_mesh = oow.primitives.spherical_cap_pixels.make_mesh(
         outer_radius=job["image_sensor"]["radius_m"],
         curvature_radius=job["image_sensor"]["curvature_radius_m"],
-        inner_radius=None,
-        n_polygon=job["polygon_density"] * 3,
+        n_hex_grid=job["image_sensor"]["num_pixel_on_diagonal"],
     )
     scenery["objects"]["image_sensor"] = oow._mesh_to_obj(
         mesh=_image_sensor_mesh
@@ -25,7 +24,7 @@ def add_image_sensor_to_scenery(scenery, job):
         ],
         "rot": {"repr": "tait_bryan", "xyz_deg": [0, 0, 0]},
         "obj": "image_sensor",
-        "mtl": {"SphericalCap": "screen"},
+        "mtl": {"SphericalPixelCap": "screen"},
     }
     scenery["tree"]["children"].append(image_sensor_ref)
 

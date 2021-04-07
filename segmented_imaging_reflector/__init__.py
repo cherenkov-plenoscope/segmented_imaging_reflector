@@ -5,6 +5,7 @@ from . import scenery
 example_job = {
     "polygon_density": 17,
     "image_sensor": {
+        "num_pixel_on_diagonal": 64,
         "radius_m": 0.35,
         "additional_housing_radius_m": 0.05,
         "curvature_radius_m": 100.0,

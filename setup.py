@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="segmented_imaging_reflector",
-    version="0.0",
+    version="0.0.0",
     description="Investigating cost-effective and mass-produced segmented imaging-reflectors",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -16,7 +16,7 @@ setuptools.setup(
     license="GPL v3",
     packages=["segmented_imaging_reflector"],
     python_requires=">=3",
-    install_requires=["optic_object_wavefronts",],
+    install_requires=["optic_object_wavefronts>=0.1.0",],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
