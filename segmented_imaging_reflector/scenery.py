@@ -6,11 +6,13 @@ FACET_ID_START = 1000000
 IMAGE_SENSOR_ID = 0
 
 
-def add_image_sensor_to_scenery(scenery, job):
+def add_image_sensor_to_scenery(scenery, image_sensor_config):
+    isc = image_sensor_config
+
     _image_sensor_mesh = oow.primitives.spherical_cap_pixels.make_mesh(
-        outer_radius=job["image_sensor"]["radius_m"],
-        curvature_radius=job["image_sensor"]["curvature_radius_m"],
-        n_hex_grid=job["image_sensor"]["num_pixel_on_diagonal"],
+        outer_radius=isc["radius_m"],
+        curvature_radius=isc["curvature_radius_m"],
+        n_hex_grid=isc["num_pixel_on_diagonal"],
     )
     scenery["objects"]["image_sensor"] = oow._mesh_to_obj(
         mesh=_image_sensor_mesh
@@ -20,7 +22,7 @@ def add_image_sensor_to_scenery(scenery, job):
         "pos": [
             0,
             0,
-            job["image_sensor"]["distance_to_principal_aperture_plane_m"],
+            isc["distance_to_principal_aperture_plane_m"],
         ],
         "rot": {"repr": "tait_bryan", "xyz_deg": [0, 0, 0]},
         "obj": "image_sensor",
@@ -28,12 +30,9 @@ def add_image_sensor_to_scenery(scenery, job):
     }
     scenery["tree"]["children"].append(image_sensor_ref)
 
-    _housing_radius = (
-        job["image_sensor"]["additional_housing_radius_m"]
-        + job["image_sensor"]["radius_m"]
-    )
+    _housing_radius = isc["additional_housing_radius_m"] + isc["radius_m"]
     _screen_shield_mesh = oow.primitives.disc.make_mesh(
-        outer_radius=_housing_radius, n=job["polygon_density"] * 3,
+        outer_radius=_housing_radius, n=isc["polygon_density"] * 3,
     )
     scenery["objects"]["image_sensor_shield"] = oow._mesh_to_obj(
         mesh=_screen_shield_mesh
@@ -44,7 +43,7 @@ def add_image_sensor_to_scenery(scenery, job):
         "pos": [
             0,
             0,
-            job["image_sensor"]["distance_to_principal_aperture_plane_m"]
+            isc["distance_to_principal_aperture_plane_m"]
             + _curvature_gap,
         ],
         "rot": {"repr": "tait_bryan", "xyz_deg": [0, 0, 0]},
@@ -56,14 +55,16 @@ def add_image_sensor_to_scenery(scenery, job):
     return scenery
 
 
-def add_facets_to_scenery(scenery, job):
+def add_facets_to_scenery(scenery, reflector_config, reflector_geometry):
     MIRROR_FACET_OBJECT_KEY = "mirror_facet"
+    rg = reflector_geometry
+    rc = reflector_config
 
     _facet_mesh = oow.primitives.spherical_cap_hexagonal.make_front_spherical_back_plane_mesh(
-        outer_radius=job["reflector"]["facet"]["outer_radius_m"],
-        curvature_radius=job["reflector"]["facet"]["curvature_radius_m"],
-        width=job["reflector"]["facet"]["width_m"],
-        n=job["polygon_density"],
+        outer_radius=rc["facet"]["outer_radius_m"],
+        curvature_radius=rc["facet"]["curvature_radius_m"],
+        width=rc["facet"]["width_m"],
+        n=rc["polygon_density"],
     )
     scenery["objects"][MIRROR_FACET_OBJECT_KEY] = oow._mesh_to_obj(
         mesh=_facet_mesh
@@ -75,15 +76,11 @@ def add_facets_to_scenery(scenery, job):
         "SphericalPlaneHexagonalBody_side": "mirror_back",
     }
 
-    facet_supports = job["reflector"]["facet_supports"]
-    facet_rotations = job["reflector"]["facet_rotations"]
-    facet_ids = job["reflector"]["facet_ids"]
-
-    for fkey in facet_supports:
+    for fkey in rg["facet_supports"]:
         facet_ref = {
-            "id": int(facet_ids[fkey]),
-            "pos": list(facet_supports[fkey]),
-            "rot": dict(facet_rotations[fkey]),
+            "id": int(rg["facet_ids"][fkey]),
+            "pos": list(rg["facet_supports"][fkey]),
+            "rot": dict(rg["facet_rotations"][fkey]),
             "obj": str(MIRROR_FACET_OBJECT_KEY),
             "mtl": dict(MIRROR_FACET_MATERIAL_KEYS),
         }
