@@ -2,8 +2,8 @@
 estimate the light-field-geometry of segemted imaging reflectors
 */
 
-#include "../merlict_c89/merlict_c89/merlict_c89.h"
-#include "../merlict_c89/merlict_c89/merlict_c89.c"
+#include "../merlict_c89/merlict_c89/all_headers.h"
+#include "../merlict_c89/merlict_c89/all_sources.c"
 
 struct mliPhoton draw_photon(
         struct mliPrng *prng,
@@ -138,8 +138,8 @@ int main(int argc, char *argv[])
                         "Failed to propagate."
                 );
 
-                idx_final_interaction = history.dyn.size - 1;
-                final_interaction = history.arr[idx_final_interaction];
+                idx_final_interaction = history.size - 1;
+                final_interaction = history.array[idx_final_interaction];
 
                 if (final_interaction.on_geometry_surface) {
                         uint64_t robj = final_interaction.geometry_id.robj;
