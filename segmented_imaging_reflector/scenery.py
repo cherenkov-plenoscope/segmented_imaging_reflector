@@ -9,13 +9,13 @@ IMAGE_SENSOR_ID = 0
 def add_image_sensor_to_scenery(scenery, image_sensor_config):
     isc = image_sensor_config
 
-    _image_sensor_mesh = oow.primitives.spherical_cap_pixels.make_mesh(
+    _image_sensor_mesh = oow.primitives.spherical_cap_pixels.init(
         outer_radius=isc["radius_m"],
         curvature_radius=isc["curvature_radius_m"],
         n_hex_grid=isc["num_pixel_on_diagonal"],
     )
-    scenery["objects"]["image_sensor"] = oow._mesh_to_obj(
-        mesh=_image_sensor_mesh
+    scenery["objects"]["image_sensor"] = oow.Wavefront.init_from_Object(
+        obj=_image_sensor_mesh
     )
     image_sensor_ref = {
         "id": IMAGE_SENSOR_ID,
@@ -31,11 +31,11 @@ def add_image_sensor_to_scenery(scenery, image_sensor_config):
     scenery["tree"]["children"].append(image_sensor_ref)
 
     _housing_radius = isc["additional_housing_radius_m"] + isc["radius_m"]
-    _screen_shield_mesh = oow.primitives.disc.make_mesh(
+    _screen_shield_mesh = oow.primitives.disc.init(
         outer_radius=_housing_radius, n=isc["polygon_density"] * 3,
     )
-    scenery["objects"]["image_sensor_shield"] = oow._mesh_to_obj(
-        mesh=_screen_shield_mesh
+    scenery["objects"]["image_sensor_shield"] = oow.Wavefront.init_from_Object(
+        obj=_screen_shield_mesh
     )
     _curvature_gap = 0.05
     image_sensor_shield_ref = {
@@ -60,14 +60,14 @@ def add_facets_to_scenery(scenery, reflector_config, reflector_geometry):
     rg = reflector_geometry
     rc = reflector_config
 
-    _facet_mesh = oow.primitives.spherical_cap_hexagonal.make_front_spherical_back_plane_mesh(
+    _facet_mesh = oow.primitives.spherical_planar_lens_hexagonal.init(
         outer_radius=rc["facet"]["outer_radius_m"],
         curvature_radius=rc["facet"]["curvature_radius_m"],
         width=rc["facet"]["width_m"],
         n=rc["polygon_density"],
     )
-    scenery["objects"][MIRROR_FACET_OBJECT_KEY] = oow._mesh_to_obj(
-        mesh=_facet_mesh
+    scenery["objects"][MIRROR_FACET_OBJECT_KEY] = oow.Wavefront.init_from_Object(
+        obj=_facet_mesh
     )
 
     MIRROR_FACET_MATERIAL_KEYS = {

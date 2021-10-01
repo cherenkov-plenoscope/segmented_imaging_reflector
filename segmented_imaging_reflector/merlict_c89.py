@@ -20,8 +20,8 @@ def write_scenery(scenery, path):
 
         # objects
         for obj_key in scenery["objects"]:
-            object_wavefront_str = oow._obj_to_wavefront(
-                obj=scenery["objects"][obj_key]
+            object_wavefront_str = oow.Wavefront.to_string(
+                wavefront=scenery["objects"][obj_key]
             )
             _tar_append(
                 tarout=tarout,
